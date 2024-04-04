@@ -7,6 +7,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useEffect, useState} from 'react';
 import token from './token';
 
+import { useAppDispatch } from './hooks';
+import { setRefreshAnyway } from './AccountReducer';
+
 type Props = NativeStackNavigationProp<
   RootStackParamList,
   'TransferConfirmation'
@@ -26,6 +29,8 @@ function TransferConfirmationScreen({navigation, route}: TransferConfirmation) {
   const [loading, setLoading] = useState(true);
   const [recipientName, setRecipientName] = useState<string>('-');
   const [ready, setReady] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const queryName = async (iban: string) => {
     try {
@@ -73,6 +78,7 @@ function TransferConfirmationScreen({navigation, route}: TransferConfirmation) {
         },
       );
       const json = await response.json();
+      dispatch(setRefreshAnyway(true));
       ToastAndroid.show('Transfer successful', ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error) {
@@ -96,7 +102,8 @@ function TransferConfirmationScreen({navigation, route}: TransferConfirmation) {
             <Icon
               name="angle-left"
               size={30}
-              onPress={() => navigation.goBack()}
+              onPress={() => {
+                navigation.goBack()}}
               color="#000"
             />
           </View>

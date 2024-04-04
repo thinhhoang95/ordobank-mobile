@@ -21,7 +21,7 @@ import {Picker} from '@react-native-picker/picker';
 
 import moment from 'moment';
 import { useAppSelector, useAppDispatch } from './hooks'
-import { setIban } from './AccountReducer'
+import { setIban, setRefreshAnyway } from './AccountReducer'
 
 import { useIsFocused } from '@react-navigation/native';
 
@@ -69,6 +69,8 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
 
   // Redux selectors and dispatch
   const iban = useAppSelector(state => state.account.iban)
+  const refreshAnyway = useAppSelector(state => state.account.refreshAnyway)
+  
   const dispatch = useAppDispatch()
 
   const [transactions, setTransactions] = useState<
@@ -185,11 +187,16 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
   };
 
   useEffect(() => {
-    if (isFocused)
+    if (isFocused && refreshAnyway)
     {
       getSummaryFromServer();
+      dispatch(setRefreshAnyway(false))
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    getSummaryFromServer();
+  }, []) // first run
 
   return (
     <>

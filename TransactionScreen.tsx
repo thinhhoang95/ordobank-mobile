@@ -4,7 +4,8 @@ import {
   SafeAreaView,
   StyleSheet,
   FlatList,
-  StatusBar
+  StatusBar,
+  ToastAndroid
 } from 'react-native';
 import {Button, Colors, Text, TextField, View} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -86,6 +87,7 @@ function TransactionScreen({
         setTransactions([...transactions, ...data.results]);
       }
       setTotalTransactions(data.total);
+      ToastAndroid.show('There are ' + data.total + ' transactions', ToastAndroid.SHORT)
       if (newQuery) {
         setPage(2);
       } else {
@@ -188,7 +190,7 @@ function TransactionScreen({
                 onPress={() => fetchTransactions(true)}
               />
             </View>
-            <View marginT-10>
+            <View flex marginT-10 paddingB-30>
               <ShimmerPlaceholder visible={!loading}>
                 <FlatList
                   data={transactions}

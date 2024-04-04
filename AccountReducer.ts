@@ -7,8 +7,14 @@ interface AccountState {
 }
 
 const initialState = {
-    iban: 'XX12345678901234567890'
+    iban: 'IBAN',
+    refreshAnyway: false
 } as AccountState
+
+interface AccountState {
+  iban: string
+  refreshAnyway: boolean
+}
 
 export const accountSlice = createSlice({
   name: 'account',
@@ -17,10 +23,13 @@ export const accountSlice = createSlice({
     setIban: (state, action: PayloadAction<string>) => {
       state.iban = action.payload
     },
+    setRefreshAnyway: (state, action: PayloadAction<boolean>) => {
+      state.refreshAnyway = action.payload
+    }
   },
 })
 
-export const { setIban } = accountSlice.actions
+export const { setIban, setRefreshAnyway } = accountSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectIban = (state: RootState) => state.account.iban
