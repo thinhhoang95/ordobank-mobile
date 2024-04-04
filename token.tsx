@@ -1,0 +1,4 @@
+const token: string =
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYmFuIjoiVk41MTMzMTU2MDMzOTIyNzI4MDAiLCJuYW1lIjoiSE9BTkcgRElOSCBUSElOSCIsImlhdCI6MTcxMTgyMTEwMywiZXhwIjoxNzc0OTM2MzAzfQ.STxMUK2U7UrKyoj8bBRsHRGxjYrvW6ao79HYvM6JXtE';
+
+export default token;

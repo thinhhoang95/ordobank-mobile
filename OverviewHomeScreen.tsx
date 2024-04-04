@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,6 +12,8 @@ import {
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import token from './token'
 
 import {View, Text, Card, TextField, Button, Colors, Chip} from 'react-native-ui-lib';
 
@@ -53,10 +56,11 @@ interface AccountSummaryTransaction {
   date: string;
 }
 
-function OverviewScreen() {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYmFuIjoiVk41MTMzMTU2MDMzOTIyNzI4MDAiLCJuYW1lIjoiSE9BTkcgRElOSCBUSElOSCIsImlhdCI6MTcxMTgyMTEwMywiZXhwIjoxNzc0OTM2MzAzfQ.STxMUK2U7UrKyoj8bBRsHRGxjYrvW6ao79HYvM6JXtE';
+interface OverviewScreenProps {
+  navigation: NativeStackNavigationProp<any, any>;
+}
 
+function OverviewScreen({ navigation }: OverviewScreenProps) {
   const [iban, setIban] = useState('IBAN');
 
   const [transactions, setTransactions] = useState<
@@ -386,6 +390,19 @@ function OverviewScreen() {
                       </View>
                     ))}
                   </ShimmerPlaceholder>
+                  <View row>
+                    <View flex marginR-2>
+                      <Button label={'All Trans'} marginT-10 onPress={() => {
+                      navigation.navigate('Transactions');
+                    }}></Button>
+                    </View>
+                    <View flex marginL-2>
+                      <Button label={'Statistics'} marginT-10 onPress={() => {
+                      navigation.navigate('Stats');
+                    }}></Button>
+                    </View>
+                  </View>
+                  
                 </Card>
               </View>
 

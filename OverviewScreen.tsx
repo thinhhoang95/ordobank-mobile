@@ -1,7 +1,8 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/AntDesign';
+
+import { StatusBar } from 'react-native';
 
 import OverviewHomeScreen from './OverviewHomeScreen';
 import TransferScreen from './TransferScreen';
@@ -12,7 +13,7 @@ function OverviewScreen() {
 
   return (
     <>
-      <StatusBar translucent backgroundColor="transparent" />
+    <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Tab.Navigator
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
