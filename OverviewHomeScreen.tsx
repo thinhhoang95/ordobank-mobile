@@ -419,7 +419,7 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
 
 const styles = StyleSheet.create({
   bgOverlay: {
-    backgroundColor: 'rgba(0, 51, 153, 1)',
+    backgroundColor: Colors.blue1,
     height: 220,
   },
   divider: {

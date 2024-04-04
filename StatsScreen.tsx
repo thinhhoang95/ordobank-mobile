@@ -6,8 +6,9 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
+  StatusBar,
 } from 'react-native';
-import {Button, Card, Colors, Text, TextField, View} from 'react-native-ui-lib';
+import {Button, Text, TextField, View} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import token from './token';
@@ -40,7 +41,28 @@ type ChartData = {
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const colorPalette = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6'];
+const colorPalette = [
+  '#00FDF0',
+  '#2EAFC3',
+  '#3C66FE',
+  '#791BBF',
+  '#511ABE',
+  '#4F01FB',
+  '#0B0A6E',
+  '#B18C8B',
+  '#ECD942',
+  '#F0325A',
+  '#21D253',
+  '#59F381',
+  '#426C39',
+  '#36FBA2',
+  '#06BF58',
+  '#FA6BEF',
+  '#970219',
+  '#92EFB1',
+  '#57FB3F',
+  '#253A32',
+];
 
 function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -134,90 +156,101 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
 
   return (
     <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <SafeAreaView style={{flex: 1}}>
         <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
-          <View style={styles.container}>
-            <View row marginT-80 marginB-20>
-              <View marginR-20>
-                <Icon
-                  name="angle-left"
-                  size={30}
-                  onPress={() => navigation.goBack()}
-                  color="#000"
-                />
+          <ScrollView style={{flex: 1}}>
+            <View style={styles.container}>
+              <View row marginT-80 marginB-20>
+                <View marginR-20>
+                  <Icon
+                    name="angle-left"
+                    size={30}
+                    onPress={() => navigation.goBack()}
+                    color="#000"
+                  />
+                </View>
+                <View flex>
+                  <Text text40BL>Statistics</Text>
+                </View>
               </View>
-              <View flex>
-                <Text text40BL>Statistics</Text>
-              </View>
-            </View>
 
-            <View>
-              <View row>
-                <View flex>
-                  <TextField
-                    placeholder="From"
-                    floatingPlaceholder
-                    label="From"
-                    onChangeText={text => {
-                      setFrom(text);
-                    }}
-                    value={from}></TextField>
+              <View>
+                <View row>
+                  <View flex>
+                    <TextField
+                      placeholder="From"
+                      floatingPlaceholder
+                      label="From"
+                      onChangeText={text => {
+                        setFrom(text);
+                      }}
+                      value={from}></TextField>
+                  </View>
+                  <View flex>
+                    <TextField
+                      placeholder="To"
+                      floatingPlaceholder
+                      label="To"
+                      onChangeText={text => {
+                        setTo(text);
+                      }}
+                      value={to}></TextField>
+                  </View>
                 </View>
-                <View flex>
-                  <TextField
-                    placeholder="To"
-                    floatingPlaceholder
-                    label="To"
-                    onChangeText={text => {
-                      setTo(text);
-                    }}
-                    value={to}></TextField>
-                </View>
-              </View>
-              {/* <View>
+                {/* <View>
                   <Text>{from}</Text>
                   <Text>{to}</Text>
                 </View> */}
-              <View row>
-                <TextField
-                  placeholder="Search"
-                  floatingPlaceholder
+                <View row>
+                  <TextField
+                    placeholder="Search"
+                    floatingPlaceholder
+                    label="Search"
+                    onChangeText={text => {
+                      setSearchText(text);
+                    }}
+                    value={searchText}
+                    flex></TextField>
+                </View>
+                <Button
                   label="Search"
-                  onChangeText={text => {
-                    setSearchText(text);
-                  }}
-                  value={searchText}
-                  flex></TextField>
+                  marginT-20
+                  onPress={() => fetchStats()}
+                />
               </View>
-              <Button label="Search" marginT-20 onPress={() => fetchStats()} />
+              <View marginT-10>
+                <ShimmerPlaceholder visible={!loading}>
+                  {stats.map((item: Stats) => {
+                    return renderStatsItem({item});
+                  })}
+                </ShimmerPlaceholder>
+              </View>
+              <View marginT-10>
+                <PieChart
+                  data={chartData}
+                  width={screenWidth - 40}
+                  height={220}
+                  chartConfig={{
+                    backgroundColor: '#1cc910',
+                    backgroundGradientFrom: '#eff3ff',
+                    backgroundGradientTo: '#efefef',
+                    decimalPlaces: 2, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  }}
+                  accessor={'net'}
+                  backgroundColor={'transparent'}
+                  paddingLeft={'15'}
+                  center={[10, 10]}
+                  absolute // For the absolute number, not percentage
+                />
+              </View>
             </View>
-            <View marginT-10>
-              <ShimmerPlaceholder visible={!loading}>
-                {stats.map((item: Stats) => {
-                  return renderStatsItem({item});
-                })}
-              </ShimmerPlaceholder>
-            </View>
-            <View marginT-10>
-              <PieChart
-                data={chartData}
-                width={screenWidth - 40}
-                height={220}
-                chartConfig={{
-                  backgroundColor: '#1cc910',
-                  backgroundGradientFrom: '#eff3ff',
-                  backgroundGradientTo: '#efefef',
-                  decimalPlaces: 2, // optional, defaults to 2dp
-                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                }}
-                accessor={'net'}
-                backgroundColor={'transparent'}
-                paddingLeft={'15'}
-                center={[10, 10]}
-                absolute // For the absolute number, not percentage
-              />
-            </View>
-          </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </>

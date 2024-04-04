@@ -7,13 +7,14 @@ import { StatusBar } from 'react-native';
 import OverviewHomeScreen from './OverviewHomeScreen';
 import TransferScreen from './TransferScreen';
 import PaymentScreen from './PaymentScreen';
+import { Colors } from 'react-native-ui-lib';
 
 function OverviewScreen() {
   const Tab = createBottomTabNavigator();
 
   return (
     <>
-    <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+    <StatusBar barStyle="light-content" backgroundColor={Colors.blue1} translucent={true} />
       <Tab.Navigator
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {

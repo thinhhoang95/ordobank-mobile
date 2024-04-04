@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   StyleSheet,
   FlatList,
+  StatusBar
 } from 'react-native';
 import {Button, Colors, Text, TextField, View} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -38,7 +39,9 @@ function TransactionScreen({
   navigation,
 }: TransactionScreenProps): React.JSX.Element {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [from, setFrom] = React.useState<string>(moment().add(-1, 'month').format('DD/MM/YYYY'));
+  const [from, setFrom] = React.useState<string>(
+    moment().add(-1, 'month').format('DD/MM/YYYY'),
+  );
   const [to, setTo] = React.useState<string>(moment().format('DD/MM/YYYY'));
   const [searchText, setSearchText] = React.useState<string>('');
   const [transactions, setTransactions] = React.useState<Array<Transaction>>(
@@ -47,16 +50,23 @@ function TransactionScreen({
   const [totalTransactions, setTotalTransactions] = React.useState<number>(0);
   const [page, setPage] = React.useState(1);
 
-  const fetchTransactions = async (newQuery:boolean = false) => {
+  const fetchTransactions = async (newQuery: boolean = false) => {
     try {
       setLoading(true);
-      let mPage = page
-      if (newQuery)
-      {
-        mPage = 1
+      let mPage = page;
+      if (newQuery) {
+        mPage = 1;
       }
-      let mFromDate = moment(from, 'DD/MM/YYYY').set('hour', 0).set('minute', 0).set('second', 0).toISOString();
-      let mToDate = moment(to, 'DD/MM/YYYY').set('hour', 23).set('minute', 59).set('second', 59).toISOString();
+      let mFromDate = moment(from, 'DD/MM/YYYY')
+        .set('hour', 0)
+        .set('minute', 0)
+        .set('second', 0)
+        .toISOString();
+      let mToDate = moment(to, 'DD/MM/YYYY')
+        .set('hour', 23)
+        .set('minute', 59)
+        .set('second', 59)
+        .toISOString();
       const response = await fetch(
         'https://bank.paymemobile.fr/transactionsCustom?token=' +
           token +
@@ -67,21 +77,19 @@ function TransactionScreen({
           '&searchTerms=' +
           searchText +
           '&page=' +
-          mPage
+          mPage,
       );
       const data: TransactionAPIResponse = await response.json();
-      if (newQuery)
-      {
+      if (newQuery) {
         setTransactions(data.results);
       } else {
         setTransactions([...transactions, ...data.results]);
       }
       setTotalTransactions(data.total);
-      if (newQuery)
-      {
-        setPage(2)
+      if (newQuery) {
+        setPage(2);
       } else {
-        setPage(page + 1)
+        setPage(page + 1);
       }
     } catch (error) {
       console.error(error);
@@ -97,9 +105,7 @@ function TransactionScreen({
           <View
             style={[
               styles.chip,
-              item.amount < 0
-                ? styles.chipNegative
-                : styles.chipPositive,
+              item.amount < 0 ? styles.chipNegative : styles.chipPositive,
             ]}>
             <Text text70BL>{item.amount.toFixed(2)}</Text>
           </View>
@@ -116,67 +122,95 @@ function TransactionScreen({
 
   return (
     <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <SafeAreaView style={{flex: 1}}>
         <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
-            <View style={styles.container}>
-              <View row marginT-80 marginB-20>
-                <View marginR-20>
-                  <Icon
-                    name="angle-left"
-                    size={30}
-                    onPress={() => navigation.goBack()}
-                    color="#000"
-                  />
+          <View style={styles.container}>
+            <View row marginT-80 marginB-20>
+              <View marginR-20>
+                <Icon
+                  name="angle-left"
+                  size={30}
+                  onPress={() => navigation.goBack()}
+                  color="#000"
+                />
+              </View>
+              <View flex>
+                <Text text40BL>Transactions</Text>
+              </View>
+            </View>
+
+            <View>
+              <View row>
+                <View flex>
+                  <TextField
+                    placeholder="From"
+                    floatingPlaceholder
+                    label="From"
+                    onChangeText={text => {
+                      setFrom(text);
+                    }}
+                    value={from}></TextField>
                 </View>
                 <View flex>
-                  <Text text40BL>Transactions</Text>
+                  <TextField
+                    placeholder="To"
+                    floatingPlaceholder
+                    label="To"
+                    onChangeText={text => {
+                      setTo(text);
+                    }}
+                    value={to}></TextField>
                 </View>
               </View>
-
-              <View>
-                <View row>
-                  <View flex>
-                    <TextField
-                      placeholder="From"
-                      floatingPlaceholder
-                      label="From"
-                      onChangeText={(text) => { setFrom(text); }}
-                      value={from}></TextField>
-                  </View>
-                  <View flex>
-                    <TextField
-                      placeholder="To"
-                      floatingPlaceholder
-                      label="To"
-                      onChangeText={(text) => { setTo(text); }}
-                      value={to}></TextField>
-                  </View>
-                </View>
-                {/* <View>
+              {/* <View>
                   <Text>{from}</Text>
                   <Text>{to}</Text>
                 </View> */}
-                <View row>
-                  <TextField
-                    placeholder="Search"
-                    floatingPlaceholder
-                    label="Search"
-                    onChangeText={(text) => { setSearchText(text); }}
-                    value={searchText}
-                    flex></TextField>
-                </View>
-                <Button label="Search" marginT-20 onPress={() => fetchTransactions(true)} />
+              <View row>
+                <TextField
+                  placeholder="Search"
+                  floatingPlaceholder
+                  label="Search"
+                  onChangeText={text => {
+                    setSearchText(text);
+                  }}
+                  value={searchText}
+                  flex></TextField>
               </View>
-              <View marginT-10>
-                <ShimmerPlaceholder visible={!loading}>
-                  <FlatList data={transactions} renderItem={renderTransactionItem} />
-                </ShimmerPlaceholder>
-              </View>
-              {(transactions.length < totalTransactions) && <Button label="Load more" marginT-10 marginB-10 backgroundColor='#00000000' outlineColor={Colors.red30} color={Colors.red30} onPress={() => {
-                setPage(page + 1);
-                fetchTransactions(false);
-              }} />}
+              <Button
+                label="Search"
+                marginT-20
+                onPress={() => fetchTransactions(true)}
+              />
             </View>
+            <View marginT-10>
+              <ShimmerPlaceholder visible={!loading}>
+                <FlatList
+                  data={transactions}
+                  renderItem={renderTransactionItem}
+                />
+              </ShimmerPlaceholder>
+            </View>
+            {transactions.length < totalTransactions && (
+              <Button
+                label="Load more"
+                marginT-10
+                marginB-10
+                backgroundColor="#00000000"
+                outlineColor={Colors.red30}
+                color={Colors.red30}
+                onPress={() => {
+                  setPage(page + 1);
+                  fetchTransactions(false);
+                }}
+              />
+            )}
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </>
