@@ -8,6 +8,7 @@ import OverviewHomeScreen from './OverviewHomeScreen';
 import TransferScreen from './TransferScreen';
 import PaymentScreen from './PaymentScreen';
 import { Colors } from 'react-native-ui-lib';
+import OverviewTransferScreen from './OverviewTransferScreen';
 
 function OverviewScreen() {
   const Tab = createBottomTabNavigator();
@@ -39,6 +40,7 @@ function OverviewScreen() {
           headerShown: false,
         })}>
         <Tab.Screen name="Home" component={OverviewHomeScreen} />
+        <Tab.Screen name="Transfer" component={OverviewTransferScreen} />
         {/* <Tab.Screen name="Transfer" component={TransferScreen} />
         <Tab.Screen name="Payment" component={PaymentScreen} /> */}
       </Tab.Navigator>

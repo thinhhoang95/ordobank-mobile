@@ -20,6 +20,10 @@ import {View, Text, Card, TextField, Button, Colors, Chip} from 'react-native-ui
 import {Picker} from '@react-native-picker/picker';
 
 import moment from 'moment';
+import { useAppSelector, useAppDispatch } from './hooks'
+import { setIban } from './AccountReducer'
+
+import { useIsFocused } from '@react-navigation/native';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -61,7 +65,11 @@ interface OverviewScreenProps {
 }
 
 function OverviewScreen({ navigation }: OverviewScreenProps) {
-  const [iban, setIban] = useState('IBAN');
+  const isFocused = useIsFocused();
+
+  // Redux selectors and dispatch
+  const iban = useAppSelector(state => state.account.iban)
+  const dispatch = useAppDispatch()
 
   const [transactions, setTransactions] = useState<
     Array<AccountSummaryTransaction>
@@ -98,7 +106,7 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
       );
 
       const data: AccountSummary = await response.json();
-      setIban(data.account.iban);
+      dispatch(setIban(data.account.iban))
 
       setWeeklyDeposits(data.currentWeek.deposit);
       setWeeklyWithdrawals(data.currentWeek.withdrawal);
@@ -177,8 +185,11 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
   };
 
   useEffect(() => {
-    getSummaryFromServer();
-  }, []);
+    if (isFocused)
+    {
+      getSummaryFromServer();
+    }
+  }, [isFocused]);
 
   return (
     <>

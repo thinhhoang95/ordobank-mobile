@@ -8,27 +8,45 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Provider} from 'react-redux';
+import store from './store';
 
 import OverviewScreen from './OverviewScreen';
 import TransferScreen from './TransferScreen';
 import PaymentScreen from './PaymentScreen';
 import TransactionScreen from './TransactionScreen';
 import StatsScreen from './StatsScreen';
+import TransferConfirmationScreen from './TransferConfirmationScreen'
 
 import {StatusBar} from 'react-native';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Overview: undefined;
+  Transfer: undefined;
+  Payment: undefined;
+  Transactions: undefined;
+  Stats: undefined;
+  TransferConfirmation: {toIban: string; amount: number, notes: string};
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Overview" component={OverviewScreen} />
-        <Stack.Screen name="Transactions" component={TransactionScreen} />
-        <Stack.Screen name="Stats" component={StatsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Group>
+            <Stack.Screen name="Overview" component={OverviewScreen} />
+            <Stack.Screen name="Transactions" component={TransactionScreen} />
+            <Stack.Screen name="Stats" component={StatsScreen} />
+          </Stack.Group>
+          <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+            <Stack.Screen name="TransferConfirmation" component={TransferConfirmationScreen} />
+          </Stack.Group>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
