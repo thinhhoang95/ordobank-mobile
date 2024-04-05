@@ -17,7 +17,7 @@ type Props = NativeStackNavigationProp<
 
 interface TransferConfirmation {
   navigation: Props;
-  route: {params: {toIban: string; mAmount: number; notes: string}};
+  route: {params: {toIban: string; mAmount: number; notes: string}} | any;
 }
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';

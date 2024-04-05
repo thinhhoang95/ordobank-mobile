@@ -9,6 +9,15 @@ import TransferScreen from './TransferScreen';
 import PaymentScreen from './PaymentScreen';
 import { Colors } from 'react-native-ui-lib';
 import OverviewTransferScreen from './OverviewTransferScreen';
+import OverviewMyInfoScreen from './OverviewMyInfoScreen';
+
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+
+interface OverviewScreenProps {
+  navigation: NativeStackNavigationProp<any, any>;
+  route: any;
+}
 
 function OverviewScreen() {
   const Tab = createBottomTabNavigator();
@@ -30,7 +39,10 @@ function OverviewScreen() {
             } else if (route.name === 'Payment') {
               // iconName = focused ? 'list' : 'ios-list-outline';
               iconName = 'creditcard';
-            } 
+            } else if (route.name === 'My Account') {
+              // iconName = focused ? 'list' : 'ios-list-outline';
+              iconName = 'user';
+            }
 
             // You can return any component that you like here!
             return <Icon name={iconName} size={size} color={color} />;
@@ -41,6 +53,7 @@ function OverviewScreen() {
         })}>
         <Tab.Screen name="Home" component={OverviewHomeScreen} />
         <Tab.Screen name="Transfer" component={OverviewTransferScreen} />
+        <Tab.Screen name="My Account" component={OverviewMyInfoScreen} />
         {/* <Tab.Screen name="Transfer" component={TransferScreen} />
         <Tab.Screen name="Payment" component={PaymentScreen} /> */}
       </Tab.Navigator>

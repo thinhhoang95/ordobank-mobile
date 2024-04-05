@@ -1,8 +1,8 @@
 import {KeyboardAvoidingView, SafeAreaView, ScrollView, ToastAndroid} from 'react-native';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
-import {View, Text, TextField, Button, Modal} from 'react-native-ui-lib';
+import {View, Text, TextField, Button, Modal, TouchableOpacity} from 'react-native-ui-lib';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
@@ -11,14 +11,30 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface OverviewTransferScreen {
   navigation: NativeStackNavigationProp<any, any>;
+  route: {params: {ibanProp: string | undefined; amountProp: number | undefined; notesProp: string | undefined}} | any;
 }
 
-function OverviewTransferScreen({navigation}: OverviewTransferScreen) {
+function OverviewTransferScreen({navigation, route}: OverviewTransferScreen) {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.account);
   const [toIban, setToIban] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+
+  useEffect(() => {
+    if (route.params === undefined) {
+      return;
+    }
+    if (route.params.ibanProp) {
+      setToIban(route.params.ibanProp);
+    }
+    if (route.params.amountProp) {
+      setAmount(route.params.amountProp.toString());
+    }
+    if (route.params.notesProp) {
+      setNotes(route.params.notesProp);
+    }
+  }, [route.params]);
 
   return (
     <>
@@ -33,7 +49,11 @@ function OverviewTransferScreen({navigation}: OverviewTransferScreen) {
                   <Text text40BL>Transfer Money</Text>
                 </View>
                 <View marginR-20>
-                  {/* <Icon name="qrcode" size={30} onPress={() => navigation.goBack()} color="#000"></Icon> */}
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate('ScanQR');
+                  }}>
+                    <Icon name="qrcode" size={30} color="#000"></Icon>
+                  </TouchableOpacity>
                 </View>
               </View>
 

@@ -19,6 +19,7 @@ import StatsScreen from './StatsScreen';
 import TransferConfirmationScreen from './TransferConfirmationScreen'
 
 import {StatusBar} from 'react-native';
+import ScanQRScreen from './ScanQRScreen';
 
 export type RootStackParamList = {
   Overview: undefined;
@@ -26,7 +27,8 @@ export type RootStackParamList = {
   Payment: undefined;
   Transactions: undefined;
   Stats: undefined;
-  TransferConfirmation: {toIban: string; amount: number, notes: string};
+  TransferConfirmation: undefined;
+  ScanQR: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +42,7 @@ function App(): React.JSX.Element {
             <Stack.Screen name="Overview" component={OverviewScreen} />
             <Stack.Screen name="Transactions" component={TransactionScreen} />
             <Stack.Screen name="Stats" component={StatsScreen} />
+            <Stack.Screen name="ScanQR" component={ScanQRScreen} />
           </Stack.Group>
           <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
             <Stack.Screen name="TransferConfirmation" component={TransferConfirmationScreen} />
