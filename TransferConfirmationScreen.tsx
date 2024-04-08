@@ -17,7 +17,7 @@ type Props = NativeStackNavigationProp<
 
 interface TransferConfirmation {
   navigation: Props;
-  route: {params: {toIban: string; mAmount: number; notes: string}} | any;
+  route: {params: {toIban: string; mAmount: number; notes: string; offRecord: boolean}} | any;
 }
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
@@ -74,7 +74,9 @@ function TransferConfirmationScreen({navigation, route}: TransferConfirmation) {
             '&amount=' +
             route.params.mAmount.toFixed(2) +
             '&description=' +
-            route.params.notes,
+            route.params.notes +
+            '&offRecord=' +
+            (route.params.offRecord ? '1' : '0'),
         },
       );
       const json = await response.json();
@@ -132,6 +134,11 @@ function TransferConfirmationScreen({navigation, route}: TransferConfirmation) {
         <View paddingH-20 marginT-30>
           <Text text70BL>Notes</Text>
           <Text text70>{route.params.notes}</Text>
+        </View>
+
+        <View paddingH-20 marginT-30>
+          <Text text70BL>Off Record</Text>
+          <Text text70>{route.params.offRecord ? 'Yes' : 'No'}</Text>
         </View>
 
         {ready && (

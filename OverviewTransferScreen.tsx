@@ -2,7 +2,7 @@ import {KeyboardAvoidingView, SafeAreaView, ScrollView, ToastAndroid} from 'reac
 
 import {useEffect, useState} from 'react';
 
-import {View, Text, TextField, Button, Modal, TouchableOpacity} from 'react-native-ui-lib';
+import {View, Text, TextField, Button, Modal, TouchableOpacity, Checkbox} from 'react-native-ui-lib';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
@@ -20,6 +20,7 @@ function OverviewTransferScreen({navigation, route}: OverviewTransferScreen) {
   const [toIban, setToIban] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+  const [offRecord, setOffRecord] = useState<boolean>(false);
 
   useEffect(() => {
     if (route.params === undefined) {
@@ -93,6 +94,10 @@ function OverviewTransferScreen({navigation, route}: OverviewTransferScreen) {
               </View>
 
               <View marginT-20 paddingH-20>
+                <Checkbox value={offRecord} label="Off-record transaction" onValueChange={value => {setOffRecord(value)}}></Checkbox>
+              </View>
+
+              <View marginT-20 paddingH-20>
                 <Button label="Transfer" onPress={() => {
                   if (toIban === '' || amount === '' || notes === '') {
                     ToastAndroid.show('Please fill in all fields', ToastAndroid.SHORT);
@@ -101,7 +106,7 @@ function OverviewTransferScreen({navigation, route}: OverviewTransferScreen) {
                   // try to parse amount
                   try {
                     let mAmount = parseFloat(amount);
-                    navigation.navigate('TransferConfirmation', {toIban: toIban.toUpperCase(), mAmount: mAmount, notes: notes.toUpperCase()});
+                    navigation.navigate('TransferConfirmation', {toIban: toIban.toUpperCase(), mAmount: mAmount, notes: notes.toUpperCase(), offRecord: offRecord});
                   } catch (error) {
                     ToastAndroid.show('Invalid amount', ToastAndroid.SHORT);
                     return;

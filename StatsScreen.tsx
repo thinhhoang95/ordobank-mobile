@@ -7,9 +7,9 @@ import {
   FlatList,
   Dimensions,
   StatusBar,
-  ToastAndroid
+  ToastAndroid,
 } from 'react-native';
-import {Button, Text, TextField, View} from 'react-native-ui-lib';
+import {Button, Text, TextField, View, Checkbox} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import token from './token';
@@ -87,6 +87,7 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
   const [amtByDay, setAmtByDay] = React.useState<Array<AmountByDayChartData>>(
     [],
   );
+  const [offRecord, setOffRecord] = React.useState<boolean>(true);
 
   const [chartData, setChartData] = React.useState<Array<ChartData>>([]);
 
@@ -121,7 +122,9 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
           '&toDate=' +
           mToDate +
           '&searchTerms=' +
-          searchText,
+          searchText +
+          '&offRecord=' +
+          (offRecord ? '1' : '0'),
       );
       const data = await response.json();
       // For each key in the data object, we create a new Stat object
@@ -283,15 +286,23 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
                   <Text>{to}</Text>
                 </View> */}
                 <View row>
-                  <TextField
-                    placeholder="Search"
-                    floatingPlaceholder
-                    label="Search"
-                    onChangeText={text => {
-                      setSearchText(text);
-                    }}
-                    value={searchText}
-                    flex></TextField>
+                  <View flex-2>
+                    <TextField
+                      placeholder="Search"
+                      floatingPlaceholder
+                      label="Search"
+                      onChangeText={text => {
+                        setSearchText(text);
+                      }}
+                      value={searchText}></TextField>
+                  </View>
+                  <View flex center>
+                    <Checkbox
+                      value={offRecord}
+                      onValueChange={v => setOffRecord(v)}
+                      label="OR"
+                    />
+                  </View>
                 </View>
                 <Button
                   label="Search"
@@ -312,59 +323,62 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
               </View>
 
               <View marginT-10>
-                {!loading && <PieChart
-                  data={chartData}
-                  width={screenWidth - 40}
-                  height={220}
-                  chartConfig={{
-                    backgroundColor: '#1cc910',
-                    backgroundGradientFrom: '#eff3ff',
-                    backgroundGradientTo: '#efefef',
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                  }}
-                  accessor={'net'}
-                  backgroundColor={'transparent'}
-                  paddingLeft={'15'}
-                  center={[10, 10]}
-                  absolute // For the absolute number, not percentage
-                />}
+                {!loading && (
+                  <PieChart
+                    data={chartData}
+                    width={screenWidth - 40}
+                    height={220}
+                    chartConfig={{
+                      backgroundColor: '#1cc910',
+                      backgroundGradientFrom: '#eff3ff',
+                      backgroundGradientTo: '#efefef',
+                      decimalPlaces: 2, // optional, defaults to 2dp
+                      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    }}
+                    accessor={'net'}
+                    backgroundColor={'transparent'}
+                    paddingLeft={'15'}
+                    center={[10, 10]}
+                    absolute // For the absolute number, not percentage
+                  />
+                )}
               </View>
 
               <View marginT-20 paddingB-20>
-                {(amtByDay.length > 0 && !loading) && <LineChart
-                  data={{
-                    labels: amtByDay.map(data => data.dayOfMonth.toString()),
-                    datasets: [
-                      {
-                        data: amtByDay.map(data => data.amount),
-                      },
-                    ],
-                  }}
-                  width={screenWidth - 40}
-                  height={220}
-                  chartConfig={{
-                    backgroundColor: 'transparent',
-                    backgroundGradientFrom: 'transparent',
-                    backgroundGradientTo: 'transparent',
-                    backgroundGradientFromOpacity: 0,
-                    backgroundGradientToOpacity: 0,
-                    decimalPlaces: 0,
-                    color: (opacity = 0.5) => `rgba(0, 0, 0, ${opacity})`,
-                  }}
-                  style={{
-                    marginVertical: 8,
-                    borderRadius: 16,
-                  }}
-                  formatXLabel={(xValue) => {
-                    if (parseInt(xValue) % 2 === 0) {
-                      return xValue;
-                    } else {
-                      return '';
-                    }
-                  }}
-                  
-                />}
+                {amtByDay.length > 0 && !loading && (
+                  <LineChart
+                    data={{
+                      labels: amtByDay.map(data => data.dayOfMonth.toString()),
+                      datasets: [
+                        {
+                          data: amtByDay.map(data => data.amount),
+                        },
+                      ],
+                    }}
+                    width={screenWidth - 40}
+                    height={220}
+                    chartConfig={{
+                      backgroundColor: 'transparent',
+                      backgroundGradientFrom: 'transparent',
+                      backgroundGradientTo: 'transparent',
+                      backgroundGradientFromOpacity: 0,
+                      backgroundGradientToOpacity: 0,
+                      decimalPlaces: 0,
+                      color: (opacity = 0.5) => `rgba(0, 0, 0, ${opacity})`,
+                    }}
+                    style={{
+                      marginVertical: 8,
+                      borderRadius: 16,
+                    }}
+                    formatXLabel={xValue => {
+                      if (parseInt(xValue) % 2 === 0) {
+                        return xValue;
+                      } else {
+                        return '';
+                      }
+                    }}
+                  />
+                )}
               </View>
             </View>
           </ScrollView>

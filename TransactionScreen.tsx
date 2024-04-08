@@ -7,7 +7,7 @@ import {
   StatusBar,
   ToastAndroid
 } from 'react-native';
-import {Button, Colors, Text, TextField, View} from 'react-native-ui-lib';
+import {Button, Checkbox, Colors, Text, TextField, View} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import token from './token';
@@ -50,6 +50,7 @@ function TransactionScreen({
   );
   const [totalTransactions, setTotalTransactions] = React.useState<number>(0);
   const [page, setPage] = React.useState(1);
+  const [offRecord, setOffRecord] = React.useState<boolean>(true);
 
   const fetchTransactions = async (newQuery: boolean = false) => {
     try {
@@ -78,7 +79,9 @@ function TransactionScreen({
           '&searchTerms=' +
           searchText +
           '&page=' +
-          mPage,
+          mPage +
+          '&offRecord=' +
+          (offRecord ? '1' : '0')
       );
       const data: TransactionAPIResponse = await response.json();
       if (newQuery) {
@@ -174,6 +177,7 @@ function TransactionScreen({
                   <Text>{to}</Text>
                 </View> */}
               <View row>
+                <View flex-2>
                 <TextField
                   placeholder="Search"
                   floatingPlaceholder
@@ -181,8 +185,11 @@ function TransactionScreen({
                   onChangeText={text => {
                     setSearchText(text);
                   }}
-                  value={searchText}
-                  flex></TextField>
+                  value={searchText}></TextField>
+                  </View>
+                <View flex center>
+                <Checkbox value={offRecord} onValueChange={(v) => setOffRecord(v)} label="OR" />
+                </View>
               </View>
               <Button
                 label="Search"

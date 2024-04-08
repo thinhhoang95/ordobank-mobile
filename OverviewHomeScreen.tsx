@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import token from './token'
 
-import {View, Text, Card, TextField, Button, Colors, Chip} from 'react-native-ui-lib';
+import {View, Text, Card, TextField, Button, Colors, Chip, Checkbox} from 'react-native-ui-lib';
 
 import {Picker} from '@react-native-picker/picker';
 
@@ -96,6 +96,8 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
   const [tagSpending, setTagSpending] = useState<string>('others');
   const [paying, setPaying] = useState<boolean>(false);
 
+  const [offRecord, setOffRecord] = useState<boolean>(false);
+
   const getSummaryFromServer = async () => {
     try {
       setLoading(true);
@@ -152,6 +154,7 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
     // convert amountSpending to string
     let mAmount = parseFloat(amountSpending).toFixed(4);
     try {
+      console.log('offRecord = ' + offRecord)
       const response = await fetch(
         'https://bank.paymemobile.fr/transfer?token=' + token,
         {
@@ -165,7 +168,8 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
             '&description=' +
             mNotes +
             '&token=' +
-            token,
+            token + 
+            '&offRecord=' + (offRecord ? '1' : '0'),
         },
       );
 
@@ -353,8 +357,15 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
                         value="shopping"
                         label="Shopping"
                       />
+                      <Picker.Item key="health" value="health" label="Health" />
+                      <Picker.Item key="leisure" value="leisure" label="Leisure" />
+                      <Picker.Item key="savings" value="savings" label="Savings" />
                       <Picker.Item key="others" value="others" label="Others" />
                     </Picker>
+                  </View>
+
+                  <View marginT-10>
+                    <Checkbox value={offRecord} onValueChange={(v) => setOffRecord(v)} label="Off-record transaction" />
                   </View>
 
                   {!paying && (
