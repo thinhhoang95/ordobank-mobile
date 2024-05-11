@@ -16,10 +16,13 @@ import TransferScreen from './TransferScreen';
 import PaymentScreen from './PaymentScreen';
 import TransactionScreen from './TransactionScreen';
 import StatsScreen from './StatsScreen';
-import TransferConfirmationScreen from './TransferConfirmationScreen'
+import TransferConfirmationScreen from './TransferConfirmationScreen';
 
 import {StatusBar} from 'react-native';
 import ScanQRScreen from './ScanQRScreen';
+import LoginScreen from './LoginScreen';
+
+import {TokenProvider} from './token';
 
 export type RootStackParamList = {
   Overview: undefined;
@@ -29,6 +32,7 @@ export type RootStackParamList = {
   Stats: undefined;
   TransferConfirmation: undefined;
   ScanQR: undefined;
+  Login: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -36,19 +40,25 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Group>
-            <Stack.Screen name="Overview" component={OverviewScreen} />
-            <Stack.Screen name="Transactions" component={TransactionScreen} />
-            <Stack.Screen name="Stats" component={StatsScreen} />
-            <Stack.Screen name="ScanQR" component={ScanQRScreen} />
-          </Stack.Group>
-          <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
-            <Stack.Screen name="TransferConfirmation" component={TransferConfirmationScreen} />
-          </Stack.Group>
-        </Stack.Navigator>
-      </NavigationContainer>
+      <TokenProvider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Group>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Overview" component={OverviewScreen} />
+              <Stack.Screen name="Transactions" component={TransactionScreen} />
+              <Stack.Screen name="Stats" component={StatsScreen} />
+              <Stack.Screen name="ScanQR" component={ScanQRScreen} />
+            </Stack.Group>
+            <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+              <Stack.Screen
+                name="TransferConfirmation"
+                component={TransferConfirmationScreen}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TokenProvider>
     </Provider>
   );
 }

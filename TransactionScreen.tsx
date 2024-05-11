@@ -10,12 +10,12 @@ import {
 import {Button, Checkbox, Colors, Text, TextField, View} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import token from './token';
 
 import moment from 'moment';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { TokenContext } from './token';
 
 interface TransactionScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -39,6 +39,9 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 function TransactionScreen({
   navigation,
 }: TransactionScreenProps): React.JSX.Element {
+
+  const {token, setToken} = React.useContext(TokenContext);
+  
   const [loading, setLoading] = React.useState<boolean>(false);
   const [from, setFrom] = React.useState<string>(
     moment().add(-1, 'month').format('DD/MM/YYYY'),
@@ -197,7 +200,7 @@ function TransactionScreen({
                 onPress={() => fetchTransactions(true)}
               />
             </View>
-            <View flex marginT-10 paddingB-30>
+            <View flex marginT-10>
               <ShimmerPlaceholder visible={!loading}>
                 <FlatList
                   data={transactions}
@@ -208,8 +211,7 @@ function TransactionScreen({
             {transactions.length < totalTransactions && (
               <Button
                 label="Load more"
-                marginT-10
-                marginB-10
+                marginB-30
                 backgroundColor="#00000000"
                 outlineColor={Colors.red30}
                 color={Colors.red30}

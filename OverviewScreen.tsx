@@ -12,6 +12,7 @@ import OverviewTransferScreen from './OverviewTransferScreen';
 import OverviewMyInfoScreen from './OverviewMyInfoScreen';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface OverviewScreenProps {
@@ -19,7 +20,7 @@ interface OverviewScreenProps {
   route: any;
 }
 
-function OverviewScreen() {
+function OverviewScreen({ navigation }: OverviewScreenProps): React.ReactElement {
   const Tab = createBottomTabNavigator();
 
   return (

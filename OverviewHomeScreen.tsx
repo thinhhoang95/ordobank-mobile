@@ -12,9 +12,6 @@ import {
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import token from './token'
-
 import {View, Text, Card, TextField, Button, Colors, Chip, Checkbox} from 'react-native-ui-lib';
 
 import {Picker} from '@react-native-picker/picker';
@@ -24,6 +21,8 @@ import { useAppSelector, useAppDispatch } from './hooks'
 import { setIban, setRefreshAnyway } from './AccountReducer'
 
 import { useIsFocused } from '@react-navigation/native';
+
+import { TokenContext } from './token';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -65,6 +64,8 @@ interface OverviewScreenProps {
 }
 
 function OverviewScreen({ navigation }: OverviewScreenProps) {
+  const { token, setToken } = React.useContext(TokenContext);
+
   const isFocused = useIsFocused();
 
   // Redux selectors and dispatch
@@ -200,7 +201,7 @@ function OverviewScreen({ navigation }: OverviewScreenProps) {
 
   useEffect(() => {
     getSummaryFromServer();
-  }, []) // first run
+  }, [token]) // first run
 
   return (
     <>

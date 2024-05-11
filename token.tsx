@@ -1,4 +1,38 @@
-const token: string =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYmFuIjoiVk41MTMzMTU2MDMzOTIyNzI4MDAiLCJuYW1lIjoiSE9BTkcgRElOSCBUSElOSCIsImlhdCI6MTcxMTgyMTEwMywiZXhwIjoxNzc0OTM2MzAzfQ.STxMUK2U7UrKyoj8bBRsHRGxjYrvW6ao79HYvM6JXtE';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
 
-export default token;
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        if (token == null) {
+            return '';
+        }
+        return token;
+    } catch (error) {
+        console.log(error);
+        return '';
+    }
+}
+
+const TokenContext = React.createContext<{ token: string, setToken: (token: string) => void }>({
+    token: '',
+    setToken: () => { },
+});
+
+const TokenProvider = ({ children }: { children: React.ReactNode }) => {
+    const [token, setToken] = React.useState('');
+
+    React.useEffect(() => {
+        getToken().then((token) => {
+            setToken(token ?? '');
+        });
+    }, []);
+
+    return (
+        <TokenContext.Provider value={{ token, setToken }}>
+            {children}
+        </TokenContext.Provider>
+    );
+}
+
+export { TokenProvider, TokenContext };

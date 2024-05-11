@@ -12,7 +12,6 @@ import {
 import {Button, Text, TextField, View, Checkbox} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import token from './token';
 import {PieChart} from 'react-native-chart-kit';
 import {LineChart} from 'react-native-chart-kit';
 
@@ -22,6 +21,7 @@ const screenWidth = Dimensions.get('window').width;
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { TokenContext } from './token';
 
 interface StatsScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -77,6 +77,8 @@ const colorPalette = [
 ];
 
 function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
+  const { token, setToken } = React.useContext(TokenContext);
+
   const [loading, setLoading] = React.useState<boolean>(false);
   const [from, setFrom] = React.useState<string>(
     moment().add(-1, 'month').format('DD/MM/YYYY'),
@@ -143,7 +145,7 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
       for (const key in data) {
         chartDataArray.push({
           name: key,
-          net: data[key].withdrawals,
+          net: Math.round(data[key].withdrawals * 100) / 100, // We only show the withdrawals
           color: randomColor(key),
           legendFontColor: '#7F7F7F',
           legendFontSize: 15,
@@ -320,6 +322,11 @@ function StatsScreen({navigation}: StatsScreenProps): React.JSX.Element {
                     return renderStatsItem({item});
                   })}
                 </ShimmerPlaceholder>
+              </View>
+
+              <View marginT-10>
+                <Text text70BL>Total deposits: {stats.reduce((acc, item) => acc + item.deposits, 0).toFixed(2)}</Text>
+                <Text text70BL>Total withdrawals: {stats.reduce((acc, item) => acc + item.withdrawals, 0).toFixed(2)}</Text>
               </View>
 
               <View marginT-10>

@@ -4,8 +4,7 @@ import {RootStackParamList} from './App';
 import {StyleSheet, ToastAndroid} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import {useEffect, useState} from 'react';
-import token from './token';
+import {useEffect, useState, useContext} from 'react';
 
 import { useAppDispatch } from './hooks';
 import { setRefreshAnyway } from './AccountReducer';
@@ -22,10 +21,13 @@ interface TransferConfirmation {
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { TokenContext } from './token';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 function TransferConfirmationScreen({navigation, route}: TransferConfirmation) {
+  const {token, setToken} = useContext(TokenContext);
+
   const [loading, setLoading] = useState(true);
   const [recipientName, setRecipientName] = useState<string>('-');
   const [ready, setReady] = useState(false);
