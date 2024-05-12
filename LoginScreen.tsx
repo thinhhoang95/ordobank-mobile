@@ -18,6 +18,7 @@ interface LoginScreenProps {
 function LoginScreen({navigation}: LoginScreenProps) {
   const [iban, setIban] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [splash, setSplash] = React.useState(true);
 
   // Check if the token is already stored in the local storage
   React.useEffect(() => {
@@ -25,9 +26,10 @@ function LoginScreen({navigation}: LoginScreenProps) {
       const token = await AsyncStorage.getItem('token');
       if (token) {
         console.log('Token found');
-        navigation.navigate('Overview');
+        navigation.replace('Overview');
       } else {
         console.log('Token not found');
+        setSplash(false);
       }
     };
     checkToken();
@@ -59,6 +61,14 @@ function LoginScreen({navigation}: LoginScreenProps) {
       console.log(error);
     }
   };
+
+  if (splash) {
+    return (
+      <View flex centerH centerV>
+        <Text text70BL>Verifying device...</Text>
+      </View>
+    );
+  }
 
   return (
     <>

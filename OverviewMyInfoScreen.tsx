@@ -41,7 +41,7 @@ function MyInfoScreen({navigation}: MyInfoScreenProps) {
                   {iban}
                 </Text>
                 <Text text70>Vertex Banking Corporation</Text>
-                <Text text70>SWIFT: VNVXPA0</Text>
+                <Text text70>SWIFT: VRTXVNVX</Text>
               </TouchableOpacity>
               <TextField
                 text70

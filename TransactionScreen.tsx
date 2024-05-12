@@ -108,7 +108,7 @@ function TransactionScreen({
 
   const renderTransactionItem = ({item}: {item: Transaction}) => {
     return (
-      <View key={item._id}>
+      <View key={item._id} marginL-20 marginR-20>
         <View row paddingT-20>
           <View
             style={[
@@ -138,7 +138,7 @@ function TransactionScreen({
       <SafeAreaView style={{flex: 1}}>
         <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
           <View style={styles.container}>
-            <View row marginT-80 marginB-20>
+            <View row marginT-80 marginB-20 marginL-20 marginR-20>
               <View marginR-20>
                 <Icon
                   name="angle-left"
@@ -152,7 +152,7 @@ function TransactionScreen({
               </View>
             </View>
 
-            <View>
+            <View marginL-20 marginR-20>
               <View row>
                 <View flex>
                   <TextField
@@ -208,6 +208,7 @@ function TransactionScreen({
                 />
               </ShimmerPlaceholder>
             </View>
+            {transactions.length >= totalTransactions && <View height={20}></View>}
             {transactions.length < totalTransactions && (
               <Button
                 label="Load more"
@@ -230,9 +231,7 @@ function TransactionScreen({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingLeft: 20,
-    paddingRight: 20,
+    flex: 1
   },
   divider: {
     marginTop: 10,
